@@ -2,6 +2,7 @@
 **
 ** Copyright (C) 2012 Denis Shienkov <denis.shienkov@gmail.com>
 ** Copyright (C) 2012 Laszlo Papp <lpapp@kde.org>
+** Copyright (C) 2014 Nikolay Nozdrin-Plotnitsky <nozdrin.plotnitsky@gmail.com>
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtSerialPort module of the Qt Toolkit.
@@ -48,6 +49,8 @@
 #include <QMainWindow>
 
 #include <QtSerialPort/QSerialPort>
+#include <QTextStream>
+#include <QFileDialog>
 
 namespace Ui {
 class MainWindow;
@@ -55,17 +58,38 @@ class MainWindow;
 
 
 class Console;
-class SettingsDialog;
+class QIntValidator;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
+    struct Settings {
+        QString name;
+        qint32 baudRate;
+        QString stringBaudRate;
+        QSerialPort::DataBits dataBits;
+        QString stringDataBits;
+        QSerialPort::Parity parity;
+        QString stringParity;
+        QSerialPort::StopBits stopBits;
+        QString stringStopBits;
+        QSerialPort::FlowControl flowControl;
+        QString stringFlowControl;
+        bool localEchoEnabled;
+    };
+
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    Settings settingsFun() const;
+
 private slots:
+    void showPortInfo(int idx);
+    void apply();
+    void checkCustomBaudRatePolicy(int idx);
+
     void openSerialPort();
     void closeSerialPort();
     void about();
@@ -74,14 +98,38 @@ private slots:
 
     void handleError(QSerialPort::SerialPortError error);
 
+    void on_rescan_clicked();
+
+    void on_ButtonConnect_clicked();
+
+    void on_applyButton_clicked();
+
+    void on_clearScreen_clicked();
+
+    void on_startLog_clicked();
+
+    void on_send_file_clicked();
+
 private:
+    void fillPortsParameters();
+    void fillPortsInfo();
+    void updateSettings();
+
     void initActionsConnections();
 
 private:
     Ui::MainWindow *ui;
     Console *console;
-    SettingsDialog *settings;
     QSerialPort *serial;
+
+    Settings currentSettings;
+    QIntValidator *intValidator;
+
+    QFileDialog *file_log;
+    bool log_enable;
+    QString name_logfile;
+    QFile *logfile;
+    QFileDialog *file_send;
 };
 
 #endif // MAINWINDOW_H

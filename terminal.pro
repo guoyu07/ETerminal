@@ -10,17 +10,13 @@ TEMPLATE = app
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    settingsdialog.cpp \
-    console.cpp \
+    console.cpp
 
 HEADERS += \
     mainwindow.h \
-    settingsdialog.h \
-    console.h \
+    console.h
 
 FORMS += \
-    mainwindow.ui \
-    settingsdialog.ui
+    mainwindow.ui
 
-RESOURCES += \
-    terminal.qrc
+RESOURCES +=

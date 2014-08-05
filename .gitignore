@@ -1,0 +1,4 @@
+*.[oa]
+/debug/
+/release/
+*.user
